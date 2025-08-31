@@ -109,11 +109,55 @@ class Customer(BaseModel):
             Product(product_id="P003", name="Fertilizer", quantity=3)
         ]
         
-        sample_purchase = Purchase(
-            date="2024-03-15",
-            items=sample_products,
-            total_amount=89.97
-        )
+        sample_purchase_1 = Purchase(
+                    date="2023-03-05",
+                    items=[
+                        Product(
+                            product_id="fert-111",
+                            name="All-Purpose Fertilizer",
+                            quantity=1,
+                        ),
+                        Product(
+                            product_id="trowel-222",
+                            name="Gardening Trowel",
+                            quantity=1,
+                        ),
+                    ],
+                    total_amount=35.98,
+                )
+
+        sample_purchase_2 = Purchase(
+                    date="2023-07-12",
+                    items=[
+                        Product(
+                            product_id="seeds-333",
+                            name="Tomato Seeds (Variety Pack)",
+                            quantity=2,
+                        ),
+                        Product(
+                            product_id="pots-444",
+                            name="Terracotta Pots (6-inch)",
+                            quantity=4,
+                        ),
+                    ],
+                    total_amount=42.5,
+                )
+        sample_purchase_3 = Purchase(
+                    date="2024-01-20",
+                    items=[
+                        Product(
+                            product_id="gloves-555",
+                            name="Gardening Gloves (Leather)",
+                            quantity=1,
+                        ),
+                        Product(
+                            product_id="pruner-666",
+                            name="Pruning Shears",
+                            quantity=1,
+                        ),
+                    ],
+                    total_amount=55.25,
+                )
         
         sample_comm_prefs = CommunicationPreferences(
             email=True,
@@ -139,10 +183,10 @@ class Customer(BaseModel):
             customer_start_date="2020-05-01",
             years_as_customer=4,
             billing_address=sample_address,
-            purchase_history=[sample_purchase],
+            purchase_history=[sample_purchase_1, sample_purchase_2, sample_purchase_3],
             loyalty_points=250,
             preferred_store="Springfield Garden Center",
             communication_preferences=sample_comm_prefs,
             garden_profile=sample_garden_profile,
-            scheduled_appointments={"2024-04-01": "Garden consultation"}
+            scheduled_appointments={}
         )
