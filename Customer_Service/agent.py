@@ -1,5 +1,16 @@
+"""Agent module for the customer service agent."""
+
+import logging
+import warnings
 from google.adk import Agent
-from .prompts import INSTRUCTION, GLOBAL_INSTRUCTION
+from .config import Config
+from .prompts import GLOBAL_INSTRUCTION, INSTRUCTION
+from .shared_libraries.callbacks import (
+    rate_limit_callback,
+    before_agent,
+    before_tool,
+    after_tool
+)
 from .tools.tools import (
     send_call_companion_link,
     approve_discount,
@@ -12,15 +23,22 @@ from .tools.tools import (
     schedule_planting_service,
     get_available_planting_times,
     send_care_instructions,
-    generate_qr_code
+    generate_qr_code,
 )
 
-# Create a customer service agent
+warnings.filterwarnings("ignore", category=UserWarning, module=".*pydantic.*")
+
+configs = Config()
+
+# configure logging __name__
+logger = logging.getLogger(__name__)
+
+
 root_agent = Agent(
-    model = "gemini-2.5-flash",
-    name = "customer_service_agent",
-    instruction = INSTRUCTION,
-    global_instruction="",
+    model=configs.agent_settings.model,
+    global_instruction=GLOBAL_INSTRUCTION,
+    instruction=INSTRUCTION,
+    name=configs.agent_settings.name,
     tools=[
         send_call_companion_link,
         approve_discount,
@@ -33,10 +51,10 @@ root_agent = Agent(
         schedule_planting_service,
         get_available_planting_times,
         send_care_instructions,
-        generate_qr_code
+        generate_qr_code,
     ],
-    before_agent_callback="",
-    before_model_callback="",
-    before_tool_callback="",
-    after_tool_callback=""
+    before_tool_callback=before_tool,
+    after_tool_callback=after_tool,
+    before_agent_callback=before_agent,
+    before_model_callback=rate_limit_callback,
 )
