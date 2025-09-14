@@ -3,7 +3,7 @@ import uuid
 from typing import Dict, List
 import logging
 
-def send_call_companion_link(phone_number: str) -> Dict:
+def send_call_companion_link(phone_number: str) -> dict:
     """
     Sends a link to the user's phone number to start a video session.
 
@@ -14,7 +14,7 @@ def send_call_companion_link(phone_number: str) -> Dict:
     return {"status": "success", "message": f"Call companion link sent successfully to {phone_number}."}
 
 
-def approve_discount(discount_type: str, value: float, reason: str) -> Dict:
+def approve_discount(discount_type: str, value: float, reason: str) -> dict:
     """
     Approves the flat rate or percentage discount requested by the user.
 
@@ -33,7 +33,7 @@ def approve_discount(discount_type: str, value: float, reason: str) -> Dict:
     return {"status": "ok"}
 
 
-def sync_ask_for_approval(discount_type: str, value: float, reason: str) -> Dict:
+def sync_ask_for_approval(discount_type: str, value: float, reason: str) -> dict:
     """
     Asks the manager for approval for a discount .
 
@@ -319,7 +319,7 @@ def generate_qr_code(
 
     # MOCK API Response: Replacing the actual API call with hard-coded data for now.
 
-    expiration_date = (datetime.now() + datetime.timedelta(days=expiration_date)).strftime("%Y-%m-%d")
+    expiration_date = (datetime.now() + timedelta(days=30)).strftime("%Y-%m-%d")
 
     return {
         "status": "success",

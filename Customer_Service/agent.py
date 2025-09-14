@@ -15,12 +15,14 @@ from .tools.tools import (
     generate_qr_code
 )
 
+from .shared_libraries.callbacks import before_tool, before_agent, rate_limit_callback, after_tool
+
 # Create a customer service agent
 root_agent = Agent(
     model = "gemini-2.5-flash",
     name = "customer_service_agent",
     instruction = INSTRUCTION,
-    global_instruction="",
+    global_instruction=GLOBAL_INSTRUCTION,
     tools=[
         send_call_companion_link,
         approve_discount,
@@ -35,8 +37,9 @@ root_agent = Agent(
         send_care_instructions,
         generate_qr_code
     ],
-    before_agent_callback="",
-    before_model_callback="",
-    before_tool_callback="",
-    after_tool_callback=""
+    # TODO: add callbacks
+    before_agent_callback=before_agent,
+    before_model_callback=rate_limit_callback,
+    before_tool_callback=before_tool,
+    after_tool_callback=after_tool
 )
