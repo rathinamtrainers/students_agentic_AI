@@ -1,1 +1,4 @@
 google-adk
+google-cloud-aiplatform[adk,agent_engines]
+mcp
+click
