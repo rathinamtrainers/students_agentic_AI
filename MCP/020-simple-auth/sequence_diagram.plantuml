@@ -1,0 +1,53 @@
+@startuml
+' Participants
+actor ClientApp as "Client\n(SimpleAuthClient)"
+participant Callback as "Local\nCallbackServer"
+participant Browser as "Browser"
+participant AS as "Authorization\nServer"
+participant RS as "Resource Server\n(FastMCP)"
+participant TokenVerifier as "Introspection\nTokenVerifier"
+
+' Overview note
+note over ClientApp,AS
+  1) Client starts and opens browser for authorization.
+  2) AS shows login form and issues auth code.
+  3) Client exchanges code for access token.
+  4) Client connects to RS with Bearer token.
+  5) RS calls AS /introspect via TokenVerifier to validate token.
+end note
+
+== Authorization request & login ==
+ClientApp -> AS : 1. Request Authorization URL\n(client_id, redirect_uri, state, code_challenge...)
+AS --> ClientApp : 2. Respond with Authorization URL\n(/login?state=...&client_id=...)
+ClientApp -> Browser : 3. Open Authorization URL
+Browser -> AS : 4. GET /login?state=...&client_id=...
+AS --> Browser : 5. HTML login form (demo_user/demo_password)
+
+== User authenticates ==
+Browser -> AS : 6. POST /login/callback\n(username, password, state)
+AS -> AS : 7. Validate credentials\ncreate authorization code, store mapping
+AS --> Browser : 8. 302 Redirect to client redirect URI\n?code=<auth_code>&state=<state>
+
+== Client receives code ==
+Browser -> Callback : 9. GET http://localhost:3030/callback?code=...&state=...
+Callback --> ClientApp : 10. Deliver authorization code + state
+
+== Token exchange ==
+ClientApp -> AS : 11. POST /token\n(authorization_code, code_verifier, client_auth)
+AS -> AS : 12. Exchange code -> create access token\nstore token in provider.tokens
+AS --> ClientApp : 13. 200 OK { access_token, token_type, expires_in, scope }
+
+== Connect to Resource Server ==
+ClientApp -> RS : 14. Open streamable-http / SSE connection\n(Authorization: Bearer <token>)
+RS -> TokenVerifier : 15. verify_token(token)
+TokenVerifier -> AS : 16. POST /introspect { token: <token> }
+AS -> AS : 17. Look up token => { active: true, client_id, scope, exp, aud }
+AS --> TokenVerifier : 18. introspection response (active:true,...)
+TokenVerifier --> RS : 19. Return AccessToken object
+
+== Protected tool call ==
+RS -> RS : 20. Validate scopes/resource (AuthSettings)
+ClientApp -> RS : 21. Call protected tool (get_time)
+RS --> ClientApp : 22. Tool response (current_time JSON)
+
+@enduml
