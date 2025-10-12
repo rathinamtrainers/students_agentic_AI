@@ -10,7 +10,7 @@ from google.adk.tools import BaseTool
 from pydantic import ValidationError
 from google.adk.tools.tool_context import ToolContext
 
-from Customer_Service.entities.customer import Customer
+from Tested_Agents.Customer_Service.entities.customer import Customer
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
