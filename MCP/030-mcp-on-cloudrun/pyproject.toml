@@ -1,0 +1,10 @@
+[project]
+name = "mcp-on-cloudrun"
+version = "0.1.0"
+description = "Demo for MCP deployment on cloud run"
+requires-python = ">=3.10"
+dependencies = [
+    "fastmcp>=2.7.0,<2.8.0",
+    "pydantic>=2.0,<2.12",
+]
+
